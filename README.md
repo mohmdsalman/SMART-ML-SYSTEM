@@ -13,6 +13,14 @@
 - Chat with an FAQ-based assistant (fallback to Gemini AI for complex queries)
 - It uses PyCaret to automate the model building process and Google Gemini 1.5 Pro for enhanced chatbot responses.
 
+## contributers
+- 👤 SALMAN (ME)
+- 👤 VISHNU SURESH
+- 👤 NANDANA
+- 👤 ADHITYAN 
+
+Big thanks to my teammates for their incredible contributions throughout the project! 🙌
+
 ## 🚀 Features
 
 - 📂 Upload any structured dataset (CSV format)
