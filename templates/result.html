@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Results</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS Styling -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 30px 0 10px;
+            color: #333;
+        }
+
+        h3 {
+            margin-top: 40px;
+            color: #444;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        .results-table {
+            overflow-x: auto;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .results-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table th, .results-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+        }
+
+        .results-table th {
+            background-color: #f0f8ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Model Training Results</h1>
+
+        <h2>Training Summary</h2>
+        <div>
+            {{ summary|safe }}
+        </div>
+
+        <h2>Leaderboard</h2>
+        <div>
+            {{ results|safe }}
+        </div>
+
+
+        <h3>Download Best Model</h3>
+        <a href="{{ url_for('static', filename='models/best_model.pkl') }}" download>⬇ Download Model</a>
+        <br><br>
+        <a href="/">⬅ Back to Home</a>
+    </div>
+
+</body>
+</html>

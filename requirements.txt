@@ -1,0 +1,6 @@
+pycaret
+flask
+pandas
+numpy
+google-generativeai
+dotenv

@@ -1,0 +1,45 @@
+{
+    "faqs": [
+      {
+        "question": "What is the purpose of this app?",
+        "answer": "This AutoML web app allows users to upload CSV datasets and automatically trains a machine learning model using PyCaret. It then displays model details and offers the best model for download."
+      },
+      {
+        "question": "How do I upload my dataset?",
+        "answer": "Click on the 'Choose File' button on the homepage, select your CSV file, and click 'Upload'. Make sure your file contains a header row with column names."
+      },
+      {
+        "question": "What kind of problems does this app support?",
+        "answer": "The app supports classification and regression problems. You can choose the problem type while uploading your dataset."
+      },
+      {
+        "question": "What libraries or tools are used?",
+        "answer": "The app uses Flask for the backend, PyCaret for automated machine learning, Pandas for data handling, and Bootstrap for frontend styling."
+      },
+      {
+        "question": "Where can I download the trained model?",
+        "answer": "After training, the result page provides a link to download the best model in `.pkl` format from the 'Download Model' section."
+      },
+      {
+        "question": "What is a leaderboard?",
+        "answer": "The leaderboard is a table that compares different models trained during the AutoML process. It shows metrics like accuracy, AUC, RMSE, etc."
+      },
+      {
+        "question": "What is the best model?",
+        "answer": "The best model is automatically selected based on performance metrics suitable for your problem type. It's saved and available for download."
+      },
+      {
+        "question": "Can I retrain with different features?",
+        "answer": "Currently, the app automatically selects the best features. Manual feature selection is not supported yet but may be added in future updates."
+      },
+      {
+        "question": "What format should the CSV be in?",
+        "answer": "The CSV should include a header row with column names, and rows with numeric or categorical data. Ensure the target column is properly labeled."
+      },
+      {
+        "question": "How can I get help if something goes wrong?",
+        "answer": "You can ask your question in the chatbot. If it's about the app, it will try to fetch an answer from this FAQ database. Otherwise, it may use a language model like Gemini."
+      }
+    ]
+  }
+  

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoML Project</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 50px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        form {
+            margin: 40px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        label, input, select {
+            display: block;
+            margin: 10px auto;
+            width: 90%;
+            max-width: 400px;
+            font-size: 1rem;
+        }
+
+        input, select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Chatbot icon box */
+        #chat-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #007bff; /* Blue color */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular shape */
+            width: 60px;
+            height: 60px;
+            font-size: 0; /* Disable text (if any) inside the icon */
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease; /* Smooth hover transition */
+            overflow: hidden; /* Hide any extra content */
+        }
+
+        /* Ensure only one icon is displayed */
+        #chat-icon:before {
+            content: "\1F4AC"; /* Unicode character for speech bubble */
+            font-size: 28px; /* Adjust icon size */
+        }
+
+        /* Optional: Hover effect for the icon */
+        #chat-icon:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+
+
+        #chatbox {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 600px;
+            max-height: 400px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .chatlogs {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 8px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #cce5ff;
+            align-self: flex-end;
+            color: #003366;
+            text-align: right;
+        }
+
+        .bot-message {
+            background-color: #f0f0f0;
+            align-self: flex-start;
+            color: #333;
+            text-align: left;
+        }
+
+        .input-area {
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+
+        #user_input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        .send-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+
+        .send-btn:hover {
+            background-color: #0056b3;
+        }
+        #progress-bar {
+            display: none;
+            margin: 20px auto;
+            width: 80%;
+            height: 30px;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #progress {
+            height: 100%;
+            width: 0;
+            background-color: #4caf50;
+            transition: width 0.4s ease;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the AutoML application</h1>
+
+    <form id="train-form" action="/train" method="POST" enctype="multipart/form-data">
+        <label for="file">Upload CSV:</label>
+        <input type="file" name="file" id="file" onchange="uploadAndLoadColumns()" required>
+        <br><br>
+    
+        <label for="target_column">Target Column:</label>
+        <select name="target_column" id="target_column" required>
+            <option value="">Select target column</option>
+        </select>
+        <br><br>
+    
+        <label for="problem_type">Problem Type:</label>
+        <select name="problem_type" id="problem_type" required>
+            <option value="classification">Classification</option>
+            <option value="regression">Regression</option>
+        </select>
+        <br><br>
+    
+        <input type="hidden" name="file_path" id="file_path">
+        <button type="submit" onclick="startTraining()">Start Training</button>
+    </form>
+
+
+    <!-- Chatbot -->
+    <!-- Chatbot Toggle Icon -->
+    <button id="chat-icon" onclick="toggleChat()">💬</button>
+
+    <!-- Chatbox UI -->
+    <div id="chatbox" style="display: none; flex-direction: column;">
+        <div id="chatlogs" class="chatlogs"></div>
+        <div class="input-area">
+            <input type="text" id="user_input" placeholder="Ask me anything..." />
+            <button onclick="sendMessage()" class="send-btn">Send</button>
+        </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="progress-bar">
+        <div id="progress"></div>
+    </div>
+
+    <div id="results" style="margin: 20px auto; max-width: 600px;"></div>
+
+
+
+    <script>
+        function toggleChat() {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.style.display = (chatbox.style.display === "none") ? "flex" : "none";
+        }
+    
+        async function sendMessage() {
+            let inputField = document.getElementById('user_input');
+            let chatboxBody = document.getElementById('chatlogs');
+            let userMessage = inputField.value.trim();
+    
+            if (userMessage === "") {
+                alert("Please enter a message.");
+                return;
+            }
+    
+            inputField.value = "";
+    
+            let userDiv = document.createElement("div");
+            userDiv.classList.add("message", "user-message");
+            userDiv.innerText = userMessage;
+            chatboxBody.appendChild(userDiv);
+    
+            let botDiv = document.createElement("div");
+            botDiv.classList.add("message", "bot-message");
+            botDiv.innerText = "Thinking...";
+            chatboxBody.appendChild(botDiv);
+    
+            chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    
+            try {
+                let response = await fetch('/chatbot', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userMessage })
+                });
+    
+                let data = await response.json();
+                botDiv.innerText = data.response;
+    
+            } catch (error) {
+                botDiv.innerText = "⚠️ Error fetching response.";
+            }
+    
+            chatboxBody.scrollTop = chatboxBody.scrollHeight;
+        }
+    
+        document.getElementById("user_input").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                sendMessage();
+                event.preventDefault();
+            }
+        });
+    </script>
+    
+    <script>
+        async function uploadAndLoadColumns() {
+            const fileInput = document.getElementById('file');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+    
+            try {
+                const response = await fetch('/upload_csv', {
+                    method: 'POST',
+                    body: formData
+                });
+    
+                const data = await response.json();
+    
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+    
+                const select = document.getElementById('target_column');
+                select.innerHTML = '<option value="">Select target column</option>'; // Reset
+    
+                data.columns.forEach(col => {
+                    const option = document.createElement('option');
+                    option.value = col;
+                    option.textContent = col;
+                    select.appendChild(option);
+                });
+    
+                document.getElementById('file_path').value = data.file_path;
+    
+            } catch (err) {
+                alert('Error uploading file: ' + err);
+            }
+        }
+    </script>
+ 
+    <script>
+        function startTraining() {
+            const progressBar = document.getElementById("progress");
+            const progressBarWrapper = document.getElementById("progress-bar");
+
+            // Display the progress bar
+            progressBarWrapper.style.display = "block";
+
+            // Optional: Add some simple animation
+            let width = 0;
+            progressBar.style.width = "0%";
+            const interval = setInterval(() => {
+                if (width >= 90) {
+                    clearInterval(interval);
+                    progressBar.innerHTML = "Almost done...";
+                } else {
+                    width += 1;
+                    progressBar.style.width = width + "%";
+                }
+            }, 150); // fake progress
+
+            // Show warning message
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = `
+                <p style="color: red; font-weight: bold;">
+                    🚨 Model training in progress. Please <u>do not refresh or close</u> this tab until training is complete!
+                </p>
+            `;
+        }
+    </script>
+    
+
+</body>
+</html>
+
+
+
